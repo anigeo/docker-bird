@@ -1,9 +1,8 @@
-FROM alpine:latest
+FROM debian:buster-slim
 
 RUN \
-	apk upgrade --no-cache && \
-	echo http://dl-cdn.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories && \
-	apk add --no-cache bird && \
-	sed -i 's/syslog/stderr/g' /etc/bird.conf
-
-ENTRYPOINT ["/usr/sbin/bird", "-f"]
+	export DEBIAN_FRONTEND=noninteractive && \
+	apt-get update && \
+	apt-get install --no-install-recommends -y iproute2 bird && \
+	apt-get clean && \
+	rm -rf /var/lib/apt/lists/*
